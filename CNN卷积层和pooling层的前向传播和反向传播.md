@@ -44,7 +44,7 @@ $p^{[l]}$: padding
 $s^{[l]}$: stride
 $n_c^{[l]}$ : number of  filters
 
-==fliter size==: $f^{[l]} \times f^{[l]} \times n_c^{[l-1]}$
+==fliter size==:$$k_1^{[l]} \times k_2^{[l]}\times n_c^{[l-1]}$$ 
 ==Weights==: $W^{[l]}$ size is  $f^{[l]} \times f^{[l]} \times n_c^{l - 1} \times n_c^{l}$
 ==bais==: $b^{[l]}$ size is $n_{c}^{[l]}$
 ==liner==: $z^{[l]}$,size is $n_h^{[l]} \times n_w^{[l]} \times n_c^{[l ]}$
@@ -169,10 +169,14 @@ $a^{[l]}$索引越界部分表示padding，其值为0
 ### pooling层
 pooling层进行下采样，其公式可以表示为：
 
-
+$${a^l}(i,j) = \mathop {\max }\limits_{0 \leqslant m \leqslant {k_1} - 1,0 \leqslant n \leqslant {k_2} - 1} ({a^{l - 1}}(i + m,j + n))$$
 
 ![pooling层](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1535636592185.png)
 
 
 ## 反向传播
+
+### 卷积层的反向传播
+
+### pooling层的反向传播
 
