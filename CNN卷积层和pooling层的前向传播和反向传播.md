@@ -188,6 +188,18 @@ $${a^l}(i,j) = \frac{1}{{{k_1} \times {k_2}}}\sum\limits_{m = 0}^{{k_1} - 1} {\s
 
 由上图可知$W$对每一个元素都有贡献，（偷来的图，用的符号不一致），使用链式法则有：
 
+$$\frac{{\partial E}}{{\partial w_{m',n'}^l}} = \sum\limits_{i = 0}^{n_h^l - 1} {\sum\limits_{j = 0}^{n_w^l - 1} {\frac{{\partial E}}{{\partial z_{i,j}^l}}} } \frac{{\partial z_{i,j}^l}}{{\partial w_{m',n'}^l}}$$
+
+$$\frac{{\partial z_{i,j}^l}}{{\partial w_{m',n'}^l}} = \frac{{\partial \left( {\sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {a_{i + m,j + n}^{l - 1} \times } {w_{m,n}}}  + b} \right)}}{{\partial w_{m',n'}^l}} = a_{i + m',j + n'}^{l - 1}$$
+
+记$\delta _{i,j}^l = \frac{{\partial E}}{{\partial z_{i,j}^l}}$，有：
+
+$$\eqalign{
+  \frac{{\partial E}}{{\partial w_{m',n'}^l}} =  & \sum\limits_{i = 0}^{n_h^l - 1} {\sum\limits_{j = 0}^{n_w^l - 1} {a_{i + m',j + n'}^{l - 1}\delta _{i,j}^l} }  \cr 
+  \frac{{\partial E}}{{\partial {w^l}}} =  & {a^l} \otimes {\delta ^l} \cr} $$
+
+**2. 根据$\frac{{\partial E}}{{\partial {z^l}}}$求$\frac{{\partial E}}{{\partial {z^{l - 1}}}}$**
+
 
 
 ### pooling层的反向传播
