@@ -133,8 +133,9 @@ $$\eqalign{
 
 为了方便后续的反向传播的方便，只讨论$l$层的参数，把部分上标$[l]$去掉，同时另$n_c^{[l]}=n_c^{[l-1]}=1$，前向传播公式如下：
 
-$${z^l}(i,j) = \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {{a^{l - 1}}(i + m,j + n) \times } W(m,n)}  + b$$
-$${a^l} = g({z^l})$$
+$$\eqalign{
+  {z^l}(i,j) =  & \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {a_{i + m,j + n}^{l - 1} \times } {w_{m,n}}}  + b \cr 
+  {a^l} =  & g({z^l}) \cr} $$
 
 
 ----------
@@ -167,9 +168,12 @@ $a^{[l]}$索引越界部分表示padding，其值为0
 
 
 ### pooling层
-pooling层进行下采样，其公式可以表示为：
+pooling层进行下采样，maxpool可以表示为：
 
 $${a^l}(i,j) = \mathop {\max }\limits_{0 \leqslant m \leqslant {k_1} - 1,0 \leqslant n \leqslant {k_2} - 1} ({a^{l - 1}}(i + m,j + n))$$
+
+avepool可以表示为：
+$${a^l}(i,j) = \frac{1}{{{k_1} \times {k_2}}}\sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {{a^{l - 1}}(i + m,j + n)} } $$
 
 ![pooling层](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1535636592185.png)
 
@@ -177,6 +181,14 @@ $${a^l}(i,j) = \mathop {\max }\limits_{0 \leqslant m \leqslant {k_1} - 1,0 \leqs
 ## 反向传播
 
 ### 卷积层的反向传播
+
+**1. 已知$\frac{{\partial E}}{{\partial {z^l}}}$求$\frac{{\partial E}}{{\partial {w^l}}}$**
+
+![关联关系](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1535637686290.png)
+
+由上图可知$W$对每一个元素都有贡献，（偷来的图，用的符号不一致），使用链式法则有：
+
+
 
 ### pooling层的反向传播
 
