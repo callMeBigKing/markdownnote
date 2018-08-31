@@ -138,7 +138,8 @@ $$\eqalign{
   {z^l}(i,j) =  & \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {a_{i + m,j + n}^{l - 1} \times } {w_{m,n}}}  + b \cr 
   {a^l} =  & g({z^l}) \cr} $$
 
-[考虑通道和padding](#1)
+[虑通道和padding的前向传播](#1)
+
 ----------
 
 
