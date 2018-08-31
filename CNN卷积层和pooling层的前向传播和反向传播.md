@@ -39,13 +39,13 @@ grammar_tableExtra: true
 ## 符号表示
 **如果$l$层是卷积层：**
 
-$f^{[l]}$: filter size
+
 $p^{[l]}$: padding
 $s^{[l]}$: stride
 $n_c^{[l]}$ : number of  filters
 
-==fliter size==:$$k_1^{[l]} \times k_2^{[l]}\times n_c^{[l-1]}$$ 
-==Weights==: $W^{[l]}$ size is  $f^{[l]} \times f^{[l]} \times n_c^{l - 1} \times n_c^{l}$
+==fliter size==:$k_1^{[l]} \times k_2^{[l]}\times n_c^{[l-1]}$
+==Weights==: $W^{[l]}$ size is  $k_1^{[l]} \times k_2^{[l]} \times n_c^{l - 1} \times n_c^{l}$
 ==bais==: $b^{[l]}$ size is $n_{c}^{[l]}$
 ==liner==: $z^{[l]}$,size is $n_h^{[l]} \times n_w^{[l]} \times n_c^{[l ]}$
 ==Activations==: $a^{[l]}$  size is $n_h^{[l]} \times n_w^{[l]} \times n_c^{[l ]}$
@@ -55,8 +55,8 @@ $n_c^{[l]}$ : number of  filters
 ==output==: $a^{[l]}$  size is $n_h^{[l]} \times n_w^{[l]} \times n_c^{[l ]}$
 
 $n_h^{[l]}$和$n_h^{[l-1]}$两者满足：
-$$n_h^{[l]}({s^{[l]}} - 1) + {f^{[l]}} \leqslant n_h^{[l - 1]} + 2p$$
-$$n_h^{[l]} = \left\lfloor {\frac{{n_h^{[l - 1]} + 2p - {f^{[l]}}}}{s} + 1} \right\rfloor $$
+$$n_h^{[l]}({s^{[l]}} - 1) + {f_1^{[l]}} \leqslant n_h^{[l - 1]} + 2p$$
+$$n_h^{[l]} = \left\lfloor {\frac{{n_h^{[l - 1]} + 2p - {k_1^{[l]}}}}{s} + 1} \right\rfloor $$
 符号$\left\lfloor {x} \right\rfloor$表示向下取整，$n_w^{[l]}$和$n_w^{[l-1]}$两者关系同上
 
 ![enter description here](https://www.github.com/callMeBigKing/story_writer_note/raw/master/小书匠/1535388857043.png)
@@ -76,7 +76,7 @@ $${(I \otimes K)_{ij}} = \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{
 $$0 \leqslant i \leqslant h - {k_1} + 1$$
 $$0 \leqslant j \leqslant w - {k_2} + 1$$
 
-注意这里的i的范围，不考虑padding的话Cross-correlation会产生一个较小的矩阵
+注意这里的使用的符号和$i$的范围，不考虑padding的话Cross-correlation会产生一个较小的矩阵
 
 ![Cross-correlation](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/20161013103614788.gif )
 
@@ -98,6 +98,7 @@ $$\eqalign{
 
 
 缺少一幅图回去画
+
 
 
 如果把卷积的padding项扔掉那么就变成下图这样，此时Convolution和Cross-correlation相隔的就是一个180度的翻转
@@ -137,33 +138,9 @@ $$\eqalign{
   {z^l}(i,j) =  & \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {a_{i + m,j + n}^{l - 1} \times } {w_{m,n}}}  + b \cr 
   {a^l} =  & g({z^l}) \cr} $$
 
-
-----------
-**考虑多个通道**
-
-用$z_{{c^{[l]}}}^{[l]}$表示$z^{[l]}$的第$c^{[l]}$个channel：
-
-$$\eqalign{
-  & z_{{c^{[l]}}}^{[l]} (i,j)= \sum\limits_{{c^{[l - 1]}} = 0}^{n_c^{l - 1} - 1} {(a_{{c^{[l - 1]}}}^{[l-1]} \otimes W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]})}  + b_{{c^{[l]}}}^{[l]}  \cr 
-  &  = \sum\limits_{{c^{[l - 1]}} = 0}^{n_c^{l - 1} - 1} {(\sum\limits_{m = 0}^{{f^{[l]}} - 1} {\sum\limits_{n = 0}^{{f^{[l]}} - 1} {a_{{c^{[l - 1]}}}^{[l-1]}(i + m,j + n) \times } W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]}(m,n)} )}  + b_{{c^l}}^{[l]} \cr} $$
-
-其中，${W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]}}$为$f^{[l]} \times f^{[l]}$的卷积核${W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]}}={{W^{[l]}}(:,:,{c^{[l - 1]}},{c^{[l]}})}$
-
-$$a_{{c^{[l]}}}^{[l]} = g(z_{{c^{[l]}}}^{[l]})$$
-
-$g(x)$为激活函数
-
-
+[考虑通道和padding](#1)
 ----------
 
-
-**考虑padding和stride情况下：**
-
-$$z_{{c^{[l]}}}^{[l]}(i,j) = \sum\limits_{{c^{[l - 1]}} = 0}^{n_c^{l - 1} - 1} {(\sum\limits_{m = 0}^{{f^{[l]}} - 1} {\sum\limits_{n = 0}^{{f^{[l]}} - 1} {{a^{[l-1]}}(i*s + m - p,j*s + n - p,{c^{[l - 1]}}) \times } {W^{[l]}}(m,n,{c^{[l - 1]}},{c^{[l]}})} )}  + b_{{c^l}}^{[l]}$$
-
-$$a_{{c^{[l]}}}^{[l]} = g(z_{{c^{[l]}}}^{[l]})$$
-
-$a^{[l]}$索引越界部分表示padding，其值为0
 
 
 
@@ -234,3 +211,33 @@ $$\eqalign{
 avepool，每个都是
 
 $$\frac{{\partial E}}{{\partial a_{i',j'}^{l - 1}}} = \frac{1}{{{k_1} \times {k_2}}}$$
+
+
+
+## 附
+
+<span id = "1">**考虑多个通道**</span>
+
+用$z_{{c^{[l]}}}^{[l]}$表示$z^{[l]}$的第$c^{[l]}$个channel：
+
+$$\eqalign{
+  & z_{{c^{[l]}}}^{[l]} (i,j)= \sum\limits_{{c^{[l - 1]}} = 0}^{n_c^{l - 1} - 1} {(a_{{c^{[l - 1]}}}^{[l-1]} \otimes W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]})}  + b_{{c^{[l]}}}^{[l]}  \cr 
+  &  = \sum\limits_{{c^{[l - 1]}} = 0}^{n_c^{l - 1} - 1} {(\sum\limits_{m = 0}^{{f^{[l]}} - 1} {\sum\limits_{n = 0}^{{f^{[l]}} - 1} {a_{{c^{[l - 1]}}}^{[l-1]}(i + m,j + n) \times } W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]}(m,n)} )}  + b_{{c^l}}^{[l]} \cr} $$
+
+其中，${W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]}}$为$f^{[l]} \times f^{[l]}$的卷积核${W_{{c^{[l - 1]}},{c^{[l]}}}^{[l]}}={{W^{[l]}}(:,:,{c^{[l - 1]}},{c^{[l]}})}$
+
+$$a_{{c^{[l]}}}^{[l]} = g(z_{{c^{[l]}}}^{[l]})$$
+
+$g(x)$为激活函数
+
+
+----------
+
+
+**考虑padding和stride情况下：**
+
+$$z_{{c^{[l]}}}^{[l]}(i,j) = \sum\limits_{{c^{[l - 1]}} = 0}^{n_c^{l - 1} - 1} {(\sum\limits_{m = 0}^{{f^{[l]}} - 1} {\sum\limits_{n = 0}^{{f^{[l]}} - 1} {{a^{[l-1]}}(i*s + m - p,j*s + n - p,{c^{[l - 1]}}) \times } {W^{[l]}}(m,n,{c^{[l - 1]}},{c^{[l]}})} )}  + b_{{c^l}}^{[l]}$$
+
+$$a_{{c^{[l]}}}^{[l]} = g(z_{{c^{[l]}}}^{[l]})$$
+
+$a^{[l]}$索引越界部分表示padding，其值为0
