@@ -170,10 +170,10 @@ $a^{[l]}$索引越界部分表示padding，其值为0
 ### pooling层
 pooling层进行下采样，maxpool可以表示为：
 
-$${a^l}(i,j) = \mathop {\max }\limits_{0 \leqslant m \leqslant {k_1} - 1,0 \leqslant n \leqslant {k_2} - 1} ({a^{l - 1}}(i + m,j + n))$$
+$${a^l}(i,j) = \mathop {\max }\limits_{0 \leqslant m \leqslant {k_1} - 1,0 \leqslant n \leqslant {k_2} - 1} ({a^{l - 1}}(i{\text{*}}{k_1} + m,j{\text{*}}{k_2} + n))$$
 
 avepool可以表示为：
-$${a^l}(i,j) = \frac{1}{{{k_1} \times {k_2}}}\sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {{a^{l - 1}}(i + m,j + n)} } $$
+$${a^l}(i,j) = \frac{1}{{{k_1} \times {k_2}}}\sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} - 1} {{a^{l - 1}}(i{\text{*}}{k_1} + m,j{\text{*}}{k_2} + n)} } $$
 
 ![pooling层](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1535636592185.png)
 
@@ -200,7 +200,37 @@ $$\eqalign{
 
 **2. 根据$\frac{{\partial E}}{{\partial {z^l}}}$求$\frac{{\partial E}}{{\partial {z^{l - 1}}}}$**
 
+![两层之间的关系](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1535676566240.png)
 
+上图是偷来的图，把那边的$X^l$,当成$z^l$理解，与$z_{i',j'}^{l - 1}$
+有关的$a_{i,j}^{l - 1}$，索引是从$(i' - {k_1} + 1,j' - {k_2} + 1)$到$(i',j')$（出现负值或者是越界当成是padding），根据链式法则：
+$$\frac{{\partial E}}{{\partial z_{i',j'}^{l - 1}}} = \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} + 1} {\frac{{\partial E}}{{\partial z_{i' - m,j' - n}^l}}\frac{{\partial z_{i' - m,j' - n}^l}}{{\partial z_{i',j'}^{l - 1}}}} } $$
+
+将$\frac{{\partial z_{i' - m,j' - n}^l}}{{\partial z_{i',j'}^{l - 1}}}$展开有：
+$$\frac{{\partial z_{i' - m,j' - n}^l}}{{\partial z_{i',j'}^{l - 1}}} = \frac{{\partial \sum\limits_{s = 0}^{{k_1} - 1} {\sum\limits_{t = 0}^{{k_2} + 1} {z_{i' - m + s,j' - n + t}^{l - 1}w_{s,t}^l} } }}{{\partial z_{i',j'}^{l - 1}}} = w_{m,n}^l$$
+
+从而可以得到：
+$$\eqalign{
+  \frac{{\partial E}}{{\partial z_{i',j'}^{l - 1}}} =  & \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} + 1} {\frac{{\partial E}}{{\partial z_{i' - m,j' - n}^l}}w_{m,n}^l} }  \cr 
+   =  & \sum\limits_{m = 0}^{{k_1} - 1} {\sum\limits_{n = 0}^{{k_2} + 1} {\delta _{i' - m,j' - n}^lw_{m,n}^l} }  \cr 
+   =  & {\delta ^l} * {W^l} \cr} $$
+   
+这里的$*$代表是卷积操作
 
 ### pooling层的反向传播
 
+pooling层的反向传播比较简，没有要训练的参数
+
+![pooling层误差传播](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1535681696763.png)
+
+maxpool，最大的那个为1其他的均为0：
+
+$$\eqalign{
+  & \frac{{\partial E}}{{\partial a_{i',j'}^{l - 1}}} = 1\;\;if(i',j') = \arg \left( {\mathop {\max }\limits_{\left\lfloor {\frac{i}{{{k_1}}}} \right\rfloor {k_1} \leqslant i \leqslant \left\lfloor {\frac{i}{{{k_1}}}} \right\rfloor  - 1,\left\lfloor {\frac{j}{{{k_2}}}} \right\rfloor {k_2} \leqslant j \leqslant \left\lfloor {\frac{j}{{{k_2}}}} \right\rfloor  - 1} \left( {a_{i,j}^{l - 1}} \right)} \right)  \cr 
+  & \frac{{\partial E}}{{\partial a_{i',j'}^{l - 1}}} = 0\;\;else \cr} $$
+
+
+
+avepool，每个都是
+
+$$\frac{{\partial E}}{{\partial a_{i',j'}^{l - 1}}} = \frac{1}{{{k_1} \times {k_2}}}$$
