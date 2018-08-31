@@ -97,8 +97,9 @@ $$\eqalign{
 2.  这里出现了很多$I(-x,-y)$,这些负数索引可以理解成padding
 
 
-缺少一幅图回去画
+![A*B示意图](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/绘图3.svg )
 
+![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/卷积示意图.svg "卷积示意图")
 
 
 如果把卷积的padding项扔掉那么就变成下图这样，此时Convolution和Cross-correlation相隔的就是一个180度的翻转
