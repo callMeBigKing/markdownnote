@@ -179,3 +179,73 @@ def delete(T,z):
 		z.key=y.key
 ```
 
+## 平衡二叉树
+
+> [主要参考自](http://www.cnblogs.com/polly333/p/4798944.html)
+
+定义
+:一颗二叉树， 对于任意一个节点其左右子树的高度差不超过1，则称这颗二叉树为平衡二叉树
+
+平衡因子
+: 平衡二叉树的左子树的深度减去右子树的深度
+
+最小不平衡子树
+: 距离插入结点最近的，且平衡因子的绝对值大于1的结点为根的子树，称为最小不平衡子树
+
+
+### 最小不平衡子树旋转
+
+
+![四种特殊情况](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1536751332008.png)
+注意着只是四种特殊情况，
+
+``` cpp
+// LL  对应图1 传入进来的是一颗子树
+void R_rotate(BiTree *t)
+{
+         BiTree s;
+         s = (*t)->lchild;                    //s指向t的左子树根结点
+         (*t)->lchild = s->rchild;          //s的右子树挂接为t的左子树
+         s->rchild = (*t);
+         *t = s;                                //t指向新的根结点
+}
+
+// RR 对应图4
+void L_rotate(BiTree *t)
+{
+         BiTree s;
+         s = (*t)->rchild;                    //s指向t的右子树根结点
+         (*t)->rchild = s->lchild;          //s的左子树挂接为t的右子树
+         s->lchild = (*t);
+         *t = s;                                //t指向新的根结点
+}
+
+//LR 对应图2 注意补全成完全二叉树
+
+void L_rotate(BiTree *t)
+{	 	// 记录三个关键节点  根，LR中的L 和R
+		 a=t;
+		 b=a->left;
+		 c=b->right;
+		 // a<c<b 选中间的点当根
+		 a->left=c->right
+		 b->right=c->left
+		 c->right=a
+		 c->left=b
+		 retunr c
+		 
+}
+
+// RL 对应图3 注意补全成完全二叉树
+void R_lotate(BiTree *t)
+{
+		 a=t;
+		 b=a->right;
+		 c=b->left;
+		 // a>c>b 选中间的点当根
+		 a->right=c->left
+		 b->left=c->right
+		 c->right=b
+		 c->left=a
+		 retunr c
+}
