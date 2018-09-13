@@ -129,17 +129,17 @@ def insert(T,z):
 	while x!=nulll
 		y=x
 		if z.key>x.key
-			x=x.left
-		else 
 			x=x.right
+		else 
+			x=x.left
 
 	#到这里就已经找到了要插入的地方了y
 	if y==null:
 		T.root=z
 	elif y.key<x.key:
-		y.lefg=x
+		y.right=x
 	else 
-		y.right=x， 
+		y.left=x， 
 
 ```
 
@@ -196,8 +196,89 @@ def delete(T,z):
 ### 最小不平衡子树旋转
 
 
+我的理解和记忆方式
+1. 左左，左右，右右，右左，第一个左或者右表示，最小不平衡子树根节点的左子树还是右子树；第二个左或右表示，前面一个左右子树的子树。以左左为例
+
+![左左意思](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1536814273816.png)
+
+2. 算法记忆的时候画一个满二叉树进行类比
+3. 旋转的时候关注的是三个点，以左左为例关注的 是 跟节点，第一个左，第二个左表示的节点
+
 ![四种特殊情况](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1536751332008.png)
 注意着只是四种特殊情况，
+
+``` python
+# 为了简化代码这里 树的节点是假设是左右孩子结构
+
+def LL(z):
+	zl=z.left 
+	zlr=z.left.right
+	
+	z.left=zlr
+	zl.right=z
+	
+	return zl # 替换z作为根节点
+
+def RR():
+	zr=z.right
+	zrl=z.right.left
+	
+	z.right=zrl
+	zl.left=z
+	
+	return zr 
+	
+	
+#先对LR 的“R”进行变换，将其变成LL形式然后在调用LL
+def LR(z):  
+	zl=z.left
+	zlr=z.left.right
+	zlrl=z.left.right.left
+	
+	z.left=zlr
+	zl.right=zlrl
+	zlr.left=zl    ## 变成了LL结构
+	
+	return LL(z)
+	
+def RL(z):
+	zr=z.right
+	zrl=zr.left
+	zrlr=zrl.left
+	
+	z.right=zrl
+	zrl.right=zr
+	zr.left=zrlr
+	
+	return RR(Z)
+
+```
+
+### 插入
+
+
+
+### 删除
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ``` cpp
 // LL  对应图1 传入进来的是一颗子树
