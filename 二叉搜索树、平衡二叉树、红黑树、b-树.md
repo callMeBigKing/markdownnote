@@ -139,7 +139,7 @@ def insert(T,z):
 	elif y.key<x.key:
 		y.right=x
 	else 
-		y.left=x， 
+		y.left=x
 
 ```
 
@@ -191,6 +191,22 @@ def delete(T,z):
 
 最小不平衡子树
 : 距离插入结点最近的，且平衡因子的绝对值大于1的结点为根的子树，称为最小不平衡子树
+### 平衡判断
+根据左右子树的高度来判断,高度可以递归来得到，非递归算法，暂时没想到
+
+``` python
+def height(z):
+	if z=None:
+		return 0
+	else:
+		return max(height.left,height.right)+1
+def notAVL(z):
+	leftHeight=height(z.left)
+	rightHeight=height(z.right)
+	return abs(leftHeight-rightHeight)>1
+
+
+```
 
 
 ### 最小不平衡子树旋转
@@ -219,7 +235,7 @@ def LL(z):
 	
 	return zl # 替换z作为根节点
 
-def RR():
+def RR(z):
 	zr=z.right
 	zrl=z.right.left
 	
@@ -231,30 +247,58 @@ def RR():
 	
 #先对LR 的“R”进行变换，将其变成LL形式然后在调用LL
 def LR(z):  
-	zl=z.left
-	zlr=z.left.right
-	zlrl=z.left.right.left
+
+	z=RR(z)
 	
-	z.left=zlr
-	zl.right=zlrl
-	zlr.left=zl    ## 变成了LL结构
+	z=LL(z)
 	
-	return LL(z)
+	return z
 	
 def RL(z):
-	zr=z.right
-	zrl=zr.left
-	zrlr=zrl.left
-	
-	z.right=zrl
-	zrl.right=zr
-	zr.left=zrlr
-	
-	return RR(Z)
+	z=LL(z)
+	z=RR(z)	
+	return z
 
+def rotateType(z)
+	# 返回函数
+	if notAVL(z):
+		# 左右或者左左
+		if height(z.left)>height(z.right):
+			if height(z.left.left)>height(z.left.right):
+				return LL # 左左
+			else:
+				return LR #左右
+		else:
+			if height(z.right.left)>height(z.right.right):
+				return RL # 左左
+			else:
+				return RR #左右
+	else:
+		return None
 ```
 
 ### 插入
+
+[参考博客](https://blog.csdn.net/hello_bravo_/article/details/52948871)
+
+有了旋转之后插入就简单了，每次插入之后，判断插入之后的子树是否平衡，如果不平衡就进行旋转。
+
+需要用到递归插入，非递归的方式需要，从下到上寻找最小不平衡子树，最小不平衡子树的算法没有想到（暂时）
+
+``` python
+
+def AVLInsert(T,z):
+	insert(T,z)
+	
+	# 找最小不平衡子树进行旋转，至多只有一次旋转
+	y=z.parent
+	while y!=null:
+		func=rotateType(y)
+		if func not None:
+			
+	
+	
+```
 
 
 
@@ -279,54 +323,3 @@ def RL(z):
 
 
 
-
-``` cpp
-// LL  对应图1 传入进来的是一颗子树
-void R_rotate(BiTree *t)
-{
-         BiTree s;
-         s = (*t)->lchild;                    //s指向t的左子树根结点
-         (*t)->lchild = s->rchild;          //s的右子树挂接为t的左子树
-         s->rchild = (*t);
-         *t = s;                                //t指向新的根结点
-}
-
-// RR 对应图4
-void L_rotate(BiTree *t)
-{
-         BiTree s;
-         s = (*t)->rchild;                    //s指向t的右子树根结点
-         (*t)->rchild = s->lchild;          //s的左子树挂接为t的右子树
-         s->lchild = (*t);
-         *t = s;                                //t指向新的根结点
-}
-
-//LR 对应图2 注意补全成完全二叉树
-
-void L_rotate(BiTree *t)
-{	 	// 记录三个关键节点  根，LR中的L 和R
-		 a=t;
-		 b=a->left;
-		 c=b->right;
-		 // a<c<b 选中间的点当根
-		 a->left=c->right
-		 b->right=c->left
-		 c->right=a
-		 c->left=b
-		 retunr c
-		 
-}
-
-// RL 对应图3 注意补全成完全二叉树
-void R_lotate(BiTree *t)
-{
-		 a=t;
-		 b=a->right;
-		 c=b->left;
-		 // a>c>b 选中间的点当根
-		 a->right=c->left
-		 b->left=c->right
-		 c->right=b
-		 c->left=a
-		 retunr c
-}
