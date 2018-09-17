@@ -281,9 +281,9 @@ def rotateType(z)
 
 [参考博客](https://blog.csdn.net/hello_bravo_/article/details/52948871)
 
-有了旋转之后插入就简单了，每次插入之后，判断插入之后的子树是否平衡，如果不平衡就进行旋转。
+有了旋转之后插入就简单了，每次插入之后，判断插入之后，从下到上判断子树是否平衡，如果不平衡就进行旋转。
 
-需要用到递归插入，非递归的方式需要，从下到上寻找最小不平衡子树，最小不平衡子树的算法没有想到（暂时）
+
 
 ``` python
 
@@ -292,22 +292,68 @@ def AVLInsert(T,z):
 	
 	# 找最小不平衡子树进行旋转，至多只有一次旋转
 	y=z.parent
-	while y!=null:
+	while y not None:
 		func=rotateType(y)
 		if func not None:
-			
-	
-	
+			func(z)
+			break  # 只会产生一次旋转
+		y=y.parent
 ```
-
-
 
 ### 删除
 
+在删除之后进行调整，同样不用到递归，如果没有父亲节点就需要用到递归
 
 
+1. 没有孩子节点直接删除
+2. 只有一个孩子节点，将孩子节点和父节点相连接，
 
+3. 有左右节点，那么需要 找到右子树中值最小的节点y  用其替换要删除的节点z，然后再删除节点y。   节点y是z的右子树中值最小的点，意味着y至少没有左子树，是前面两种情况之一。
 
+在这个基础上找到要删除的节点的父节点，层层往上查看是否平衡
+修改一下之前的删除，让其返回删除的节点y
+
+``` python
+	
+def AVLdelete(T,z):
+	y=delete(T,z)
+	while y not None:
+		func=rotateType(y)
+		if func not None:
+			func(z)
+			break  # 只会产生一次旋转
+		y=y.parent
+		
+	
+
+def delete(T,z):
+	if z.left=null or z.right=null:
+		y=z
+	else:
+		y=next(z)
+	# 这个时候 就是删除y了,y的左右孩子至少有一个是为空
+	if y.left!=null;
+		x=y.left
+	else:
+		x=y.right
+	if x!=null
+		x.parent=y.parent   # 完成了从下到上的连接，从上到下还没有完成 
+	
+	# 完成从上到下的连接
+	if y==null:
+		T.root=z
+	else:
+		if y.parent.left==y:
+			y.parent.left=x
+		else
+			y.parent.right=x
+	# 第三种情况，将y的值赋值给z
+	if y!=z
+		z.key=y.key
+	return y
+```
+
+## 红黑树
 
 
 
