@@ -434,27 +434,49 @@ def R(x):
 
 ### 增加操作
 
-具体步骤看前面贴的参看博客，和书，这里就写一下伪代码加深记忆
+具体步骤看前面贴的参看[博客](http://www.cnblogs.com/skywang12345/p/3245399.html#aa5)参考的算法导论的代码，代理逻辑不清晰，基本无法从代码中整理出逻辑，
+ps：博客中的图有错误，120和140的color要对调一下
 
-根据被插入节点的父节点的情况，可以将"当节点z被着色为红色节点，并插入二叉树"划分为三种情况来处理。
-① 情况说明：被插入的节点是根节点。
-    处理方法：直接把此节点涂为黑色。
-② 情况说明：被插入的节点的父节点是黑色。
-    处理方法：什么也不需要做。节点被插入后，仍然是红黑树。
-③ 情况说明：被插入的节点的父节点是红色。
-    处理方法：那么，该情况与红黑树的“特性(5)”相冲突。这种情况下，被插入节点是一定存在非空祖父节点的；进一步的讲，被插入节点也一定存在叔叔节点(即使叔叔节点为空，我们也视之为存在，空节点本身就是黑色节点)。理解这点之后，我们依据"叔叔节点的情况"，将这种情况进一步划分为3种情况(Case)。
+
+[java风格的代码](https://blog.csdn.net/tcorpion/article/details/54968644)讲解不够细致，但是代码逻辑清晰
 
 ![三种情况](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537191431745.png)
 
 ``` python
 def RBInsert(T,z):
-	z.color=red
+	z.color=red   # 先使其颜色变成红色
 	insert(T,z)  # 一般二叉查找树的插入
 	
 	RBInsertFixup(T,z)
 
-def RBInsertFixup(T,z):
-	
+	RBInsertFixup(T,z)
 ```
+重点是这个fixup，和前面的AVL相识，从下到上循环修改，有父亲节点，没有父亲节点的话就只能递归了
+	
+``` python
+def RBInsertFixup(T,z):
+	while z.parent.color=red:
+		if z.parent=z.parent.parent.left: # 父亲是左分支
+			uncle=z.parent.parent.right
+			grandpa=z.parent.parent.
+			if uncle.color==red:
+				z.parent.color=black
+				uncle=black
+				grandpa=red
+				z=grandpa
+			else if uncle.color=back z=father.right:
+				z=z.parent
+				L(T,z)
+			else if uncle.color=back and  z=father.right
+				z.parent.color=blck
+				grandpa.color=red
+				R(T,grandpa)
+				
+			
+		else:
+			exchange(z.parent.left,z.parent.right)
+			
+	T.root.color=balck
+	
 
-简单但是啰嗦，先放着吧。
+```
