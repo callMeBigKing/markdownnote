@@ -456,6 +456,8 @@ ps：博客中的图有错误，120和140的color要对调一下
 
 ![三种情况](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537191431745.png)
 
+![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537982566042.png)
+
 ``` python
 def RBInsert(T,z):
 	z.color=red   # 先使其颜色变成红色
