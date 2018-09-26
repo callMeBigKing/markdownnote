@@ -179,7 +179,12 @@ def delete(T,z):
 		z.key=y.key
 ```
 
+
+
 ## 平衡二叉树
+
+![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537979601192.png)
+
 
 > [主要参考自](http://www.cnblogs.com/polly333/p/4798944.html)
 
@@ -234,6 +239,15 @@ def LL(z):
 	zl.right=z
 	
 	return zl # 替换z作为根节点
+
+#先对LR 的“R”进行变换，将其变成LL形式然后在调用LL
+def LR(z):  
+
+	z=RR(z)
+	
+	z=LL(z)
+	
+	return z
 
 def RR(z):
 	zr=z.right
