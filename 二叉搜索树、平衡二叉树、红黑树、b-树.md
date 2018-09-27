@@ -11,7 +11,7 @@ grammar_cjkRuby: true
 树一般用T表示，
 T.root 根节点
 
-对已节点z
+节点z
 z.key 表示节点的值
 z.left 表示左孩子
 z.right 表示右孩子
@@ -23,8 +23,8 @@ z.parent 表示父节点，根节点的父节点为空
 ``` python
 def search(T,key):
 	x=T.root
-	while x!=null and x.key!=key:
-		if x.ke==key:
+	while x!=None and x.key!=key:
+		if x.key==key:
 			break;
 		elif key<=x.key:
 			x=x.left
@@ -40,7 +40,7 @@ def search(T,key):
 
 ``` python
 def sort(T):
-	sorted=[]
+	
 	stack=[]
 	p=T.root
 	while(p!=null or !stack.empty):
@@ -50,9 +50,9 @@ def sort(T):
 			p=p.left
 		
 		p=stack.pop()
-		sorted.append(p.key) # 表示访问
-		p=p.right  # 空的话没有关系
-		
+		printf(p.key) 
+		p=p.right  
+
 ```
 
 
@@ -179,12 +179,7 @@ def delete(T,z):
 		z.key=y.key
 ```
 
-
-
 ## 平衡二叉树
-
-![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537979601192.png)
-
 
 > [主要参考自](http://www.cnblogs.com/polly333/p/4798944.html)
 
@@ -239,15 +234,6 @@ def LL(z):
 	zl.right=z
 	
 	return zl # 替换z作为根节点
-
-#先对LR 的“R”进行变换，将其变成LL形式然后在调用LL
-def LR(z):  
-
-	z=RR(z)
-	
-	z=LL(z)
-	
-	return z
 
 def RR(z):
 	zr=z.right
@@ -417,6 +403,7 @@ z.color black和red 可以当做是宏定义或者字符串
 **左旋**，**右旋** python 风格伪代码
 
 ``` python
+# 左旋右旋都是错了，一x.parent 连接y时要判断x在做子树还是右子树  2，判断是否是根节点
 def L(x):
 	y = x.right
 	x.right=y.left
@@ -426,8 +413,10 @@ def L(x):
 	y.left.parent=x
 	y.parent=x.parent
 	x.parent=y
-	
+		
 	return y
+
+
 
 def R(x):
 	y = x.left
@@ -455,8 +444,6 @@ ps：博客中的图有错误，120和140的color要对调一下
 [java风格的代码](https://blog.csdn.net/tcorpion/article/details/54968644)讲解不够细致，但是代码逻辑清晰
 
 ![三种情况](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537191431745.png)
-
-![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537982566042.png)
 
 ``` python
 def RBInsert(T,z):
@@ -494,5 +481,16 @@ def RBInsertFixup(T,z):
 			
 	T.root.color=balck
 	
-
 ```
+
+
+![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537835938480.png)
+
+![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537836025981.png)
+
+![enter description here](https://hosbimkimg.oss-cn-beijing.aliyuncs.com/pic/1537836033176.png)
+
+
+### 删除
+
+同理参考上面，逻辑过于啰嗦就不介绍了
